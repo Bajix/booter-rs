@@ -1,10 +1,10 @@
-//! This crate allows a simple means to register and call one time initialization functions, the idea being this could be used in conjunction with [static_init](https://crates.io/crates/static_init) or std::mem::MaybeUninit in order to create statics that can be initalized once post-main after Tokio is online and the enviroment configured. 
-//! 
+//! This crate allows a simple means to register FnOnce functions to be called on boot
+//!
 //! ```rust
 //! booter::call_on_boot!({
-//!   println("Hello World!");
+//!   println!("Hello World!");
 //! });
-//! 
+//!
 //! fn main() {
 //!   booter::boot();
 //!   booter::assert_booted();
@@ -33,11 +33,7 @@ static BOOT_CALLED: AtomicBool = AtomicBool::new(false);
 /// Call all functions captured by booter::call_on_boot.
 pub fn boot() {
   if cfg!(debug_assertions) {
-    assert_eq!(
-      BOOT_CALLED.compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed),
-      Ok(false),
-      "booter::boot should be called exactly once after env setup"
-    );
+    BOOT_CALLED.store(true, Ordering::Release);
   }
 
   for boot_box in inventory::iter::<BootBox> {
@@ -47,13 +43,13 @@ pub fn boot() {
   }
 }
 
-/// Development assertion to ensure booter::boot called exactly once. Release builds skip check
+/// Development assertion to ensure booter::boot called. Release builds skip check
 pub fn assert_booted() {
   if cfg!(debug_assertions) {
     assert_eq!(
       BOOT_CALLED.load(Ordering::Acquire),
       true,
-      "booter::boot should be called exactly once after env setup"
+      "booter::boot should be called after env setup"
     );
   }
 }
@@ -85,7 +81,7 @@ mod tests {
   });
 
   #[test]
-  #[should_panic(expected = "booter::boot should be called exactly once after env setup")]
+  #[should_panic(expected = "booter::boot should be called after env setup")]
   fn it_asserts_booter_booted() {
     BOOT_CALLED.store(false, Ordering::Release);
     assert_booted();

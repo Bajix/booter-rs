@@ -4,11 +4,11 @@
 [![Cargo](https://img.shields.io/crates/v/booter.svg)](https://crates.io/crates/booter)
 [![Documentation](https://docs.rs/booter/badge.svg)](https://docs.rs/booter)
 
-This crate allows a simple means to register and call initialization functions
+This crate allows a simple means to register FnOnce functions to be called on boot
 
 ```rust
 booter::call_on_boot!({
-  println("Hello World!");
+  println!("Hello World!");
 });
 
 fn main() {
