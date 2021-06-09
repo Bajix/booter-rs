@@ -4,7 +4,7 @@
 [![Cargo](https://img.shields.io/crates/v/booter.svg)](https://crates.io/crates/booter)
 [![Documentation](https://docs.rs/booter/badge.svg)](https://docs.rs/booter)
 
-This crate allows a simple means to register FnOnce functions to be called on boot
+This crate allows a simple means to register FnOnce functions to be called on boot. Usage requires inventory to be added as a dependency.
 
 ```rust
 booter::call_on_boot!({

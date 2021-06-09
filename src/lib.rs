@@ -11,6 +11,8 @@
 //! }
 //! ```
 
+extern crate self as booter;
+
 #[doc(hidden)]
 pub extern crate atomic_take;
 
@@ -58,11 +60,9 @@ pub fn assert_booted() {
 #[macro_export]
 macro_rules! call_on_boot {
   ($boot_fn:block) => {
-    use $crate::{atomic_take::AtomicTake, inventory, BootBox};
-
-    inventory::submit! {
-      BootBox {
-        boot_fn: AtomicTake::new(Box::new(|| $boot_fn))
+    ::booter::inventory::submit! {
+      booter::BootBox {
+        boot_fn: booter::atomic_take::AtomicTake::new(Box::new(|| $boot_fn))
       }
     }
   };
@@ -78,6 +78,10 @@ mod tests {
 
   call_on_boot!({
     CALLBACK_CALLED.store(true, Ordering::Release);
+  });
+
+  call_on_boot!({
+    println!("Hello world");
   });
 
   #[test]

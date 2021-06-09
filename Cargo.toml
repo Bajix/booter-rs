@@ -2,7 +2,7 @@
 authors = ["Thomas Sieverding <Thomas@bajix.com>"]
 edition = "2018"
 name = "booter"
-version = "1.0.2"
+version = "1.1.0"
 description = "A simple solution to register and call one-time initialization functions"
 readme = "README.md"
 license = "MIT"
