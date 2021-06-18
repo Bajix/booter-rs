@@ -34,9 +34,8 @@ static BOOT_CALLED: AtomicBool = AtomicBool::new(false);
 
 /// Call all functions captured by booter::call_on_boot.
 pub fn boot() {
-  if cfg!(debug_assertions) {
-    BOOT_CALLED.store(true, Ordering::Release);
-  }
+  #[cfg(debug_assertions)]
+  BOOT_CALLED.store(true, Ordering::Release);
 
   for boot_box in inventory::iter::<BootBox> {
     if let Some(boot_fn) = boot_box.boot_fn.take() {
@@ -47,13 +46,12 @@ pub fn boot() {
 
 /// Development assertion to ensure booter::boot called. Release builds skip check
 pub fn assert_booted() {
-  if cfg!(debug_assertions) {
-    assert_eq!(
-      BOOT_CALLED.load(Ordering::Acquire),
-      true,
-      "booter::boot should be called after env setup"
-    );
-  }
+  #[cfg(debug_assertions)]
+  assert_eq!(
+    BOOT_CALLED.load(Ordering::Acquire),
+    true,
+    "booter::boot should be called after env setup"
+  );
 }
 
 /// Register FnOnce to be called on booter::boot
