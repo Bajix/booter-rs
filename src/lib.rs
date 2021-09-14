@@ -59,8 +59,9 @@ pub fn assert_booted() {
 macro_rules! call_on_boot {
   ($boot_fn:block) => {
     ::booter::inventory::submit! {
-      booter::BootBox {
-        boot_fn: booter::atomic_take::AtomicTake::new(Box::new(|| $boot_fn))
+      #![crate = ::booter]
+      ::booter::BootBox {
+        boot_fn: ::booter::atomic_take::AtomicTake::new(Box::new(|| $boot_fn))
       }
     }
   };

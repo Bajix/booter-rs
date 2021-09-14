@@ -1,8 +1,8 @@
 [package]
 authors = ["Thomas Sieverding <Thomas@bajix.com>"]
-edition = "2018"
+edition = "2021"
 name = "booter"
-version = "1.1.1"
+version = "1.1.2"
 description = "A simple solution to register and call one-time initialization functions"
 readme = "README.md"
 license = "MIT"
